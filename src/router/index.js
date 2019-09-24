@@ -3,6 +3,7 @@ import Router from 'vue-router'
 import Home from "@/pages/home"
 import Search from "@/pages/search";
 import Index from "@/components/Index";
+import Player from "@/pages/player";
 
 Vue.use(Router)
 
@@ -27,6 +28,11 @@ export default new Router({
           ]
         }
       ]
+    },
+    {
+      path: "/player",
+      name: "Player",
+      component: Player
     }
   ]
 })

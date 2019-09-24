@@ -12,18 +12,16 @@
     </div>
     <div>
       <ul class="list searchlist">
-<!--        <router-link :key="index" tag="li" :to="{name:'MusicPlay',params:{songId:item.id}}" class="song" v-for="(item, index) in songList">-->
-        <li class="song" v-for="(item, index) in songList.itemlist">
+        <router-link :key="index" tag="li" :to="{name:'Player', params:{item: item}}" class="song" v-for="(item, index) in songList.list">
           <div class="left">
             <div class="info  single-line ">
               <div>
-                <span>{{ item.name }}</span>
+                <span id="song_name">{{ item.songname }}</span>
               </div>
-              <span class="txt">{{ item.singer }}</span>
+              <span class="txt"> {{ item.albumname }} &nbsp;&nbsp;</span><span class="txt" v-for="(singer, index) in item.singer"> {{ singer.name }} </span>
             </div>
           </div>
-        </li>
-<!--        </router-link>-->
+        </router-link>
       </ul>
     </div>
   </div>
@@ -35,17 +33,19 @@
         data(){
             return {
                 songName: "",
-                songList: []
+                songList: [],
+                resultStr: ""
             }
         },
         methods: {
             search(){
                 // const SearchURL = this.HOST + "/splcloud/fcgi-bin/smartbox_new.fcg?is_xml=0&key=" + this.songName;
-                const SearchURL = this.HOST + "/soso/fcgi-bin/client_search_cp?aggr=1&cr=1&flag_qc=0&p=1&n=30&w=" + this.songName;
+                const SearchURL = this.HOST + "/soso/fcgi-bin/client_search_cp?aggr=1&cr=1&flag_qc=0&p=1&n=15&w=" + this.songName;
                 this.$axios.get(SearchURL)
                     .then(res => {
-                        alert(res.data.callback(data))
-                        // this.songList = res.data.data.song;
+                        this.resultStr = res.data.substring(9, res.data.length - 1);
+                        this.resultStr = JSON.parse(this.resultStr);
+                        this.songList = this.resultStr.data.song;
                     })
                     .catch(error => {
                         console.log(error)
@@ -59,83 +59,17 @@
   #search{
     padding: 20px;
   }
-  .list {
-    word-wrap: break-word;
-    -webkit-hyphens: auto;
-    hyphens: auto;
-    word-break: break-all;
-    border-bottom: 1px solid #e5e5e5;
-    border-top: 1px solid #e5e5e5;
-  }
-
-  .list li.song {
-    -webkit-box-pack: justify;
-    -webkit-justify-content: space-between;
-    justify-content: space-between;
-    min-height: 55px;
-    text-align: left;
-  }
-
   li{
-    display: -webkit-box;
-    display: -webkit-flex;
-    display: flex;
-    -webkit-box-orient: horizontal;
-    -webkit-box-direction: normal;
-    -webkit-flex-direction: row;
-    flex-direction: row;
-    -webkit-box-pack: start;
-    -webkit-justify-content: flex-start;
-    justify-content: flex-start;
-    -webkit-box-align: center;
-    -webkit-align-items: center;
-    align-items: center;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-    -webkit-box-sizing: border-box;
-    box-sizing: border-box;
-    min-height: 50px;
-    border-bottom: 1px solid #F2F2F2;
-    padding-left: 10px;
+    margin-top: 10px;
+    background: blanchedalmond;
   }
-
-  .list .item.song .left, .list li.song .left {
-    display: -webkit-box;
-    display: -webkit-flex;
-    display: flex;
-    -webkit-box-orient: horizontal;
-    -webkit-box-direction: normal;
-    -webkit-flex-direction: row;
-    flex-direction: row;
-    -webkit-box-pack: start;
-    -webkit-justify-content: flex-start;
-    justify-content: flex-start;
-    -webkit-box-align: center;
-    -webkit-align-items: center;
-    align-items: center;
-    -webkit-box-flex: 1;
-    -webkit-flex: 1;
-    flex: 1;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-  }
-
-  .list .item .info, .list li .info {
-    -webkit-box-flex: 1;
-    -webkit-flex: 1;
-    flex: 1;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-  }
-
-  .list li .info>span {
-    font-weight: 400;
-    display: block;
+  .txt{
     font-size: 12px;
-    color: #999;
+    margin-top: 3px;
+  }
+  #song_name {
+    font-size: 16px;
+    color: red;
   }
 
 </style>

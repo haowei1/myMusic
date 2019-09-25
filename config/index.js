@@ -18,7 +18,7 @@ module.exports = {
         pathRewrite: {
           '^/qq_music_api': ''
         }
-      }
+      },
     },
 
     // Various Dev Server settings

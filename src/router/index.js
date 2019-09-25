@@ -4,8 +4,10 @@ import Home from "@/pages/home"
 import Search from "@/pages/search";
 import Index from "@/components/Index";
 import Player from "@/pages/player";
+import qs from "qs"
 
 Vue.use(Router)
+Vue.use(qs)
 
 export default new Router({
   routes: [

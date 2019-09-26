@@ -39,7 +39,6 @@
         },
         methods: {
             search(){
-                // const SearchURL = this.HOST + "/splcloud/fcgi-bin/smartbox_new.fcg?is_xml=0&key=" + this.songName;
                 const SearchURL = this.HOST + "/soso/fcgi-bin/client_search_cp?aggr=1&cr=1&flag_qc=0&p=1&n=15&w=" + this.songName;
                 this.$axios.get(SearchURL)
                     .then(res => {

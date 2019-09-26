@@ -19,6 +19,15 @@ module.exports = {
           '^/qq_music_api': ''
         }
       },
+      '/api/getLRC': {
+        target: 'https://c.y.qq.com/lyric/fcgi-bin/fcg_query_lyric_yqq.fcg', //https://y.qq.com/n/yqq/song/000us9j40zyooq.html
+        bypass: function (req, res, proxyOptions) {
+          req.headers.referer = 'https://y.qq.com';
+        },
+        pathRewrite: {
+          '^/api/getLRC': ''
+        }
+      },
     },
 
     // Various Dev Server settings

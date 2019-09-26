@@ -1,23 +1,28 @@
 <template>
   <div id="player">
-      <div>
-        <h2 id="name">{{ this.$route.params.item.songname }}</h2>
-        <div id="singer">
-          <span v-for="(singer, index) in singer">{{ singer.name }} &nbsp;</span>
-        </div>
+    <div>
+      <h2 id="name">{{ this.$route.params.item.songname }}</h2>
+      <div id="singer">
+        <span v-for="(singer, index) in singer">{{ singer.name }} &nbsp;</span>
+      </div>
+    </div>
 
-      </div>
-      <div id="img">
-        <img :src=imgUrl />
-      </div>
-      <div id="audio">
-        <audio :src=playUrl ref="player" controls autoplay></audio>
-      </div>
+    <div id="img">
+      <img :src=imgUrl />
+    </div>
+    <div id="lrc">
+      <LRC :musicId ='this.$route.params.item.songid'  :durationTime="durationTime" :currentTime="currentTime"/>
+    </div>
+    <div id="audio">
+      <audio :src=playUrl ref="player" controls autoplay></audio>
+    </div>
   </div>
 </template>
-
 <script>
-    import {getDisList} from '../assets/js/music'
+    import Vue from 'vue'
+    const LRC = Vue.component("lrc",(resolve)=>require(["../components/LRC"],resolve))
+    // import LRC from '../components/LRC'
+    // const getLRC = require('../assets/js/music');
     export default {
         name: "player",
         data() {
@@ -28,14 +33,17 @@
                 songMid: "",
                 albumMid: "",
                 singer: [],
-                LRC: "",
-                currentLyric: ""
+                lrc: "",
+                currentTime:0,
+                durationTime:0
             }
         },
-        created() {
-            this._getDiscList();
-
+        components:{
+            LRC
         },
+        // created() {
+        //     this._getLRC();
+        // },
         mounted() {
             this.singer = this.singer = this.$route.params.item.singer;
             this.songMid = this.$route.params.item.songmid;
@@ -51,21 +59,40 @@
                 .catch(error => {
                     console.log(error)
                 });
-            const lrcUrl = this.HOST + "/lyric/fcgi-bin/fcg_query_lyric_yqq.fcg?nobase64=1&musicid=237224580&-=jsonp1&g_tk=5381&loginUin=2278395159&hostUin=0&format=json&inCharset=utf8&outCharset=utf-8&notice=0&platform=yqq.json&needNewCode=0"
-            // const reqRef = this.HOST + "/n/yqq/song/0013advw2X1Z7j.html"
+            this.addEventListeners();
         },
-        methods:{
-            _getDiscList() {
-                var t;
-                clearTimeout(t)
-                t = setTimeout(function (){
-                    getDisList().then((res) => {
-                        console.log(res)
-                    })
-                }, 1000);
+        methods: {
+            // _getLRC() {
+            //     getLRC.getLRC(this.$route.params.item.songid).then((res) => {
+            //         let div = document.createElement('div');
+            //         div.innerHTML = res.lyric;
+            //         this.lrc = div.firstChild.nodeValue
+            //     })
+            // },
+            addEventListeners(){
+                this.$refs.player.addEventListener('timeupdate', this._currentTime),
+                    this.$refs.player.addEventListener('canplay', this._durationTime)
+            },
+            removeEventListeners: function () {
+                this.$refs.player.removeEventListener('timeupdate', this._currentTime)
+                this.$refs.player.removeEventListener('canplay', this._durationTime)
+            },
+            _currentTime(){
+                this.currentTime = this.$refs.player.currentTime
+                // currentTime是audio标签提供的获取当前播放时间的方法
+            },
+            _durationTime(){
+                this.durationTime = this.$refs.player.duration
+                // duration是audio标签提供的获得歌曲播放整体时间的方法
             }
+
         },
+        beforeDestroyed(){
+            this.removeEventListeners();
+        },
+
     }
+
 </script>
 
 <style scoped>
@@ -98,6 +125,14 @@
     width: 200px;
     width: 200px;
   }
+  #lrc{
+    margin-top: 80px;
+    text-align: center;
+    width: 80%;
+    margin-left: auto;
+    margin-right: auto;
+    background-color: navajowhite;
+  }
   #audio{
     width: 100%;
     position: fixed;
@@ -106,3 +141,10 @@
     right: auto;
   }
 </style>
+/*
+var t;
+clearTimeout(t)
+t = setTimeout(function (){
+  //doSomeSting
+}, 500);
+*/

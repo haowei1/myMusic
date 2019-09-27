@@ -42,33 +42,45 @@
           }
         },
         created() {
-            this._getLRC();
+            // this._getLRC();
         },
         mounted() {
-            console.log(this.musicId);
-            console.log(this.lrcStr)
-            // 数据格式处理
-            var lyrics = this.lrcStr.split("\n");
-            var lrcObj = {};
-            for(var i = 0 ;i<lyrics.length;i++){
-                var lyric = decodeURIComponent(lyrics[i]);
-                var timeReg = /\[\d*:\d*((\.|\:)\d*)*\]/g;
-                var timeRegExpArr = lyric.match(timeReg);
-                if(!timeRegExpArr)continue;
-                var clause = lyric.replace(timeReg,'');
-                for(var k = 0,h = timeRegExpArr.length;k < h;k++) {
-                    var t = timeRegExpArr[k];
-                    var min = Number(String(t.match(/\[\d*/i)).slice(1)),
-                        sec = Number(String(t.match(/\:\d*/i)).slice(1));
-                    var time = min * 60 + sec;
-                    lrcObj[time] = clause;
+            getLRC.getLRC(this.musicId).then((res) => {
+                if (res.code == -1901){
+                    this.lrcStr = "[00:00.00]抱歉，暂无歌词";
+                }else {
+                    let div = document.createElement('div');
+                    div.innerHTML = res.lyric;
+                    this.lrcStr = div.firstChild.nodeValue
                 }
-            }
-            this.lrcData = lrcObj;
+                // 数据格式处理
+                const lyrics = this.lrcStr.split("\n");
+                const lrcObj = {};
+                for (var h = 0 ; h<lyrics.length; h++) {
+                    if (lyrics[h].endsWith(']')){
+                        delete lyrics[h];
+                    }
+                }
+                for(let i = 0 ;i<lyrics.length; i++){
+                    const lyric = decodeURIComponent(lyrics[i]);
+                    const timeReg = /\[\d*:\d*((\.|\:)\d*)*\]/g;
+                    const timeRegExpArr = lyric.match(timeReg);
+                    if(!timeRegExpArr)continue;
+                    const clause = lyric.replace(timeReg,'');
+                    for(let k = 0,h = timeRegExpArr.length;k < h; k++) {
+                        const t = timeRegExpArr[k];
+                        const min = Number(String(t.match(/\[\d*/i)).slice(1)),
+                            sec = Number(String(t.match(/\:\d*/i)).slice(1));
+                        const time = min * 60 + sec;
+                        lrcObj[time] = clause;
+                    }
+                }
+                this.lrcData = lrcObj;
+            })
         },
         computed:{
             getAllKey(){
-                for(var i in this.lrcData){
+                for(const i in this.lrcData){
                     this.keyArr.push(i);
                 }
             }
@@ -80,13 +92,14 @@
                     lrcDiv.style.top = -((index-2)*30)+"px"
                 }
             },
-            _getLRC() {
-                getLRC.getLRC(this.musicId).then((res) => {
-                    let div = document.createElement('div');
-                    div.innerHTML = res.lyric;
-                    this.lrcStr = div.firstChild.nodeValue
-                })
-            },
+            // _getLRC() {
+            //     getLRC.getLRC(this.$route.params.item.songid).then((res) => {
+            //         let div = document.createElement('div');
+            //         div.innerHTML = res.lyric;
+            //         this.lrc = div.firstChild.nodeValue
+            //     })
+            // },
+
         }
     }
 </script>
@@ -98,7 +111,12 @@
     overflow: hidden;
     position: relative;
   }
-
+  .active{
+    color: red !important;
+    font-size: 16px !important;
+    margin-bottom: 4px !important;
+    margin-top: 4px !important;
+  }
   .lrc{
     width: 100%;
     position: absolute;
@@ -107,5 +125,8 @@
   .lrc-p{
     height: 30px;
     line-height: 30px;
+  }
+  .up30{
+    margin-top: -30px;
   }
 </style>

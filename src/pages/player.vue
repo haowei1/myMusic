@@ -8,7 +8,7 @@
     </div>
 
     <div id="img">
-      <img :src=imgUrl />
+      <img :src=imgUrl onerror="this.src='https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1569563447275&di=358fe70e3b2fefd11f239c7d7977d1e1&imgtype=0&src=http%3A%2F%2Fwww.banbaowang.com%2Fuploads%2Fallimg%2F190128%2F32-1Z12QGQ5.jpg';this.onerror=null"/>
     </div>
     <div id="lrc">
       <LRC :musicId ='this.$route.params.item.songid'  :durationTime="durationTime" :currentTime="currentTime"/>
@@ -21,8 +21,6 @@
 <script>
     import Vue from 'vue'
     const LRC = Vue.component("lrc",(resolve)=>require(["../components/LRC"],resolve))
-    // import LRC from '../components/LRC'
-    // const getLRC = require('../assets/js/music');
     export default {
         name: "player",
         data() {
@@ -50,11 +48,14 @@
             this.albumMid = this.$route.params.item.albummid;
             this.imgUrl = "https://y.gtimg.cn/music/photo_new/T002R300x300M000" + this.albumMid + ".jpg";
             const infoUrl = this.HOST + "/base/fcgi-bin/fcg_music_express_mobile3.fcg?format=json205361747&platform=yqq&cid=205361747" +
-                "&songmid=" + this.songMid + "&filename=C400" + this.songMid + ".m4a&guid=126548448";
+                "&songmid=" + this.songMid + "&filename=C400" + this.songMid + ".m4a&guid=126548448&loginUin=2012313298";
             this.$axios.get(infoUrl)
                 .then(res => {
                     this.songInfo = res.data.data.items;
-                    this.playUrl = "http://ws.stream.qqmusic.qq.com/" + this.songInfo[0].filename + "?fromtag=0&guid=126548448&vkey=" + this.songInfo[0].vkey;
+                    if (this.songInfo[0].vkey == ""){
+                        this.open();
+                    }
+                    this.playUrl = "http://ws.stream.qqmusic.qq.com/" + this.songInfo[0].filename + "?fromtag=0&loginUin=2012313298&guid=126548448&vkey=" + this.songInfo[0].vkey;
                 })
                 .catch(error => {
                     console.log(error)
@@ -62,13 +63,6 @@
             this.addEventListeners();
         },
         methods: {
-            // _getLRC() {
-            //     getLRC.getLRC(this.$route.params.item.songid).then((res) => {
-            //         let div = document.createElement('div');
-            //         div.innerHTML = res.lyric;
-            //         this.lrc = div.firstChild.nodeValue
-            //     })
-            // },
             addEventListeners(){
                 this.$refs.player.addEventListener('timeupdate', this._currentTime),
                     this.$refs.player.addEventListener('canplay', this._durationTime)
@@ -84,12 +78,26 @@
             _durationTime(){
                 this.durationTime = this.$refs.player.duration
                 // duration是audio标签提供的获得歌曲播放整体时间的方法
+            },
+            // open() {
+            //     this.$message.error('Sorry o(╥﹏╥)o 暂时不能播放此歌曲');
+            // }
+            open() {
+                this.$alert('暂时不能播放此歌曲', 'Sorry o(╥﹏╥)o', {
+                    confirmButtonText: '确定',
+                    callback: action => {
+                        this.$router.go(-1);//返回上一层
+                    }
+                });
             }
 
         },
         beforeDestroyed(){
             this.removeEventListeners();
         },
+        destroyed() {
+            this.$message.close()
+        }
 
     }
 
@@ -126,12 +134,15 @@
     width: 200px;
   }
   #lrc{
-    margin-top: 80px;
+    position: fixed;
     text-align: center;
-    width: 80%;
+    width: 100%;
+    bottom: 170px;
+    height: auto;
+    color: fuchsia;
     margin-left: auto;
     margin-right: auto;
-    background-color: navajowhite;
+    font-style: initial;
   }
   #audio{
     width: 100%;

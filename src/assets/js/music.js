@@ -8,7 +8,7 @@ export let getLRC = function(musicId) {
     nobase64: 1,
     musicid: musicId,
     g_tk: 5381,
-    loginUin: 0,
+    loginUin: 2012313298,
     hostUin: 0,
     format: 'json',
     inCharset: 'utf8',

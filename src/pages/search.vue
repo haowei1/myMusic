@@ -19,6 +19,7 @@
                 <span id="song_name">{{ item.songname }}</span>
               </div>
               <span class="txt"> {{ item.albumname }} &nbsp;&nbsp;</span><span class="txt" v-for="(singer, index) in item.singer"> {{ singer.name }} </span>
+            <el-divider></el-divider>
             </div>
           </div>
         </router-link>
@@ -60,7 +61,6 @@
   }
   li{
     margin-top: 10px;
-    background: blanchedalmond;
   }
   .txt{
     font-size: 12px;

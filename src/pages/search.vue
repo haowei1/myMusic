@@ -19,7 +19,6 @@
                 <span id="song_name">{{ item.songname }}</span>
               </div>
               <span class="txt"> {{ item.albumname }} &nbsp;&nbsp;</span><span class="txt" v-for="(singer, index) in item.singer"> {{ singer.name }} </span>
-            <el-divider></el-divider>
             </div>
           </div>
         </router-link>
@@ -59,9 +58,6 @@
   #search{
     padding: 20px;
   }
-  li{
-    margin-top: 10px;
-  }
   .txt{
     font-size: 12px;
     margin-top: 3px;
@@ -69,6 +65,11 @@
   #song_name {
     font-size: 16px;
     color: red;
+  }
+  .song{
+    margin-top: 10px;
+    bottom: 0px;
+    background-color: blanchedalmond;
   }
 
 </style>

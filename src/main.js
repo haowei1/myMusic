@@ -5,15 +5,19 @@ import App from './App'
 import router from './router'
 import ElementUI from 'element-ui'
 import 'element-ui/lib/theme-chalk/index.css';
-import Axios from 'axios';
 
 Vue.use(ElementUI)
 
-Vue.prototype.$axios = Axios;
-Vue.prototype.HOST = "/qq_music_api"
+// 设置反向代理，前端请求默认发送到 http://localhost:8080/music
+const axios = require('axios')
+axios.defaults.baseURL = 'http://localhost:8080/'
+
+Vue.prototype.$axios = axios;
+Vue.prototype.host = '/music'
+
 // const axiosInstance = axios.create({
-//   headers: {'Content-Type': 'application/json;charset=utf-8'},// 设置传输内容的类型和编码
-//   withCredentials: true,// 指定某个请求应该发送凭据。允许客户端携带跨域cookie，也需要此配置
+// headers: {'Content-Type': 'application/json;charset=utf-8'},// 设置传输内容的类型和编码
+// withCredentials: true,// 指定某个请求应该发送凭据。允许客户端携带跨域cookie，也需要此配置
 // });
 
 Vue.config.productionTip = false

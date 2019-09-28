@@ -14,12 +14,11 @@ const HOST = process.env.HOST
 const PORT = process.env.PORT && Number(process.env.PORT)
 
 
-var express = require('express')
-var axios = require('axios')
-var app = express()
-var apiRoutes = express.Router()
-app.use('/api', apiRoutes)
-
+// var express = require('express')
+// var axios = require('axios')
+// var app = express()
+// var apiRoutes = express.Router()
+// app.use('/api', apiRoutes)
 
 
 const devWebpackConfig = merge(baseWebpackConfig, {
@@ -32,21 +31,21 @@ const devWebpackConfig = merge(baseWebpackConfig, {
   // these devServer options should be customized in /config/index.js
   devServer: {
 
-    before(app) {
-      app.get('/api/getLRC', function (req, res) {
-        var url = 'https://c.y.qq.com/lyric/fcgi-bin/fcg_query_lyric_yqq.fcg' // 原api
-        axios.get(url, {
-          headers: {
-            referer: 'https://y.qq.com', ///n/yqq/song/004dFFPd4JNv8q.html
-          },
-          params: req.query
-        }).then((response) => {
-          res.json(response.data)
-        }).catch((e) => {
-          console.log(e)
-        })
-      })
-    },
+// before(app) {
+//   app.get('/api/getLRC', function (req, res) {
+//     var url = 'https://c.y.qq.com/lyric/fcgi-bin/fcg_query_lyric_yqq.fcg' // 原api
+//     axios.get(url, {
+//       headers: {
+//         referer: 'https://y.qq.com', ///n/yqq/song/004dFFPd4JNv8q.html
+//       },
+//       params: req.query
+//     }).then((response) => {
+//       res.json(response.data)
+//     }).catch((e) => {
+//       console.log(e)
+//     })
+//   })
+// },
 
     clientLogLevel: 'warning',
     historyApiFallback: {

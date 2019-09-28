@@ -39,12 +39,15 @@
         },
         methods: {
             search(){
-                const SearchURL = this.HOST + "/soso/fcgi-bin/client_search_cp?aggr=1&cr=1&flag_qc=0&p=1&n=15&w=" + this.songName;
-                this.$axios.get(SearchURL)
+                // const url = "https://c.y.qq.com/soso/fcgi-bin/client_search_cp?aggr=1&cr=1&flag_qc=0&p=1&n=15&w=" + this.songName;
+                const url = "/music/search";
+                this.$axios.post(url , {
+                    songName : this.songName
+                })
                     .then(res => {
-                        this.resultStr = res.data.substring(9, res.data.length - 1);
-                        this.resultStr = JSON.parse(this.resultStr);
-                        this.songList = this.resultStr.data.song;
+                        // this.resultStr = res.data.substring(9, res.data.length - 1);
+                        // this.resultStr = JSON.parse(this.resultStr);
+                        this.songList = res.data.data.song;
                     })
                     .catch(error => {
                         console.log(error)

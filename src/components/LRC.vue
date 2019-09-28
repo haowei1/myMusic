@@ -1,10 +1,10 @@
 <template>
   <div class="lrcContainer">
     <div class="lrc" ref="lrc">
-<!--      <p class="lrc-p" v-for="(item, key, index) in lrcData" :key="index"> {{ item }}</p>-->
+<!-- <p class="lrc-p" v-for="(item, key, index) in lrcData" :key="index"> {{ item }}</p>-->
+<!-- <p v-show="(parseInt(currentTime) >= keyArr[index]) && (parseInt(currentTime) < keyArr[index+1])" class="lrc-p"  v-for="(item,key,index) in lrcData" :key="index">{{ item }} </p> -->
 
       {{ getAllKey }}
-      <!-- <p v-show="(parseInt(currentTime) >= keyArr[index]) && (parseInt(currentTime) < keyArr[index+1])" class="lrc-p"  v-for="(item,key,index) in lrcData" :key="index">{{ item }} </p> -->
       <p
         class="lrc-p"
         :class="{active:parseInt(currentTime) >= keyArr[index] && parseInt(currentTime) < keyArr[index+1]}"
@@ -17,7 +17,7 @@
 </template>
 
 <script>
-    const getLRC = require('../assets/js/music');
+// const getLRC = require('../assets/js/music');
     export default {
         name: "LRC",
         data(){
@@ -41,42 +41,47 @@
               default:0
           }
         },
-        created() {
-            // this._getLRC();
-        },
         mounted() {
-            getLRC.getLRC(this.musicId).then((res) => {
-                if (res.code == -1901){
-                    this.lrcStr = "[00:00.00]抱歉，暂无歌词";
-                }else {
-                    let div = document.createElement('div');
-                    div.innerHTML = res.lyric;
-                    this.lrcStr = div.firstChild.nodeValue
-                }
-                // 数据格式处理
-                const lyrics = this.lrcStr.split("\n");
-                const lrcObj = {};
-                for (var h = 0 ; h<lyrics.length; h++) {
-                    if (lyrics[h].endsWith(']')){
-                        delete lyrics[h];
-                    }
-                }
-                for(let i = 0 ;i<lyrics.length; i++){
-                    const lyric = decodeURIComponent(lyrics[i]);
-                    const timeReg = /\[\d*:\d*((\.|\:)\d*)*\]/g;
-                    const timeRegExpArr = lyric.match(timeReg);
-                    if(!timeRegExpArr)continue;
-                    const clause = lyric.replace(timeReg,'');
-                    for(let k = 0,h = timeRegExpArr.length;k < h; k++) {
-                        const t = timeRegExpArr[k];
-                        const min = Number(String(t.match(/\[\d*/i)).slice(1)),
-                            sec = Number(String(t.match(/\:\d*/i)).slice(1));
-                        const time = min * 60 + sec;
-                        lrcObj[time] = clause;
-                    }
-                }
-                this.lrcData = lrcObj;
+            const lrcUrl = "/music/lrc";
+            this.$axios.post(lrcUrl, {
+                musicId: this.musicId
             })
+                .then(res => {
+                    if (res.data.code == -1901){
+                        this.lrcStr = "[00:00.00]抱歉，暂无歌词";
+                    }else {
+                        let div = document.createElement('div');
+                        div.innerHTML = res.data.lyric;
+                        this.lrcStr = div.firstChild.nodeValue
+
+                        // 数据格式处理
+                        const lyrics = this.lrcStr.split("\n");
+                        const lrcObj = {};
+                        for (var h = 0 ; h<lyrics.length; h++) {
+                            if (lyrics[h].endsWith(']')){
+                                delete lyrics[h];
+                            }
+                        }
+                        for(let i = 0 ;i<lyrics.length; i++){
+                            const lyric = decodeURIComponent(lyrics[i]);
+                            const timeReg = /\[\d*:\d*((\.|\:)\d*)*\]/g;
+                            const timeRegExpArr = lyric.match(timeReg);
+                            if(!timeRegExpArr)continue;
+                            const clause = lyric.replace(timeReg,'');
+                            for(let k = 0,h = timeRegExpArr.length;k < h; k++) {
+                                const t = timeRegExpArr[k];
+                                const min = Number(String(t.match(/\[\d*/i)).slice(1)),
+                                    sec = Number(String(t.match(/\:\d*/i)).slice(1));
+                                const time = min * 60 + sec;
+                                lrcObj[time] = clause;
+                            }
+                        }
+                        this.lrcData = lrcObj;
+                    }
+                })
+                .catch(e => {
+                    console.log(e)
+                });
         },
         computed:{
             getAllKey(){
@@ -92,14 +97,13 @@
                     lrcDiv.style.top = -((index-2)*30)+"px"
                 }
             },
-            // _getLRC() {
-            //     getLRC.getLRC(this.$route.params.item.songid).then((res) => {
-            //         let div = document.createElement('div');
-            //         div.innerHTML = res.lyric;
-            //         this.lrc = div.firstChild.nodeValue
-            //     })
-            // },
-
+// _getLRC() {
+//     getLRC.getLRC(this.$route.params.item.songid).then((res) => {
+//         let div = document.createElement('div');
+//         div.innerHTML = res.lyric;
+//         this.lrc = div.firstChild.nodeValue
+//     })
+// },
         }
     }
 </script>

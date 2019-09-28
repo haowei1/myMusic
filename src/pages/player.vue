@@ -47,9 +47,14 @@
             this.songMid = this.$route.params.item.songmid;
             this.albumMid = this.$route.params.item.albummid;
             this.imgUrl = "https://y.gtimg.cn/music/photo_new/T002R300x300M000" + this.albumMid + ".jpg";
-            const infoUrl = this.HOST + "/base/fcgi-bin/fcg_music_express_mobile3.fcg?format=json205361747&platform=yqq&cid=205361747" +
-                "&songmid=" + this.songMid + "&filename=C400" + this.songMid + ".m4a&guid=126548448&loginUin=2012313298";
-            this.$axios.get(infoUrl)
+            // const infoUrl = this.HOST + "/base/fcgi-bin/fcg_music_express_mobile3.fcg?format=json205361747&platform=yqq&cid=205361747" +
+            //     "&songmid=" + this.songMid + "&filename=C400" + this.songMid + ".m4a&guid=126548448&loginUin=2012313298";
+
+            const infoUrl = "/music/info";
+
+            this.$axios.post(infoUrl, {
+                songMid : this.songMid,
+            })
                 .then(res => {
                     this.songInfo = res.data.data.items;
                     if (this.songInfo[0].vkey == ""){
@@ -79,9 +84,9 @@
                 this.durationTime = this.$refs.player.duration
                 // duration是audio标签提供的获得歌曲播放整体时间的方法
             },
-            // open() {
-            //     this.$message.error('Sorry o(╥﹏╥)o 暂时不能播放此歌曲');
-            // }
+// open() {
+// this.$message.error('Sorry o(╥﹏╥)o 暂时不能播放此歌曲');
+// }
             open() {
                 this.$alert('暂时不能播放此歌曲', 'Sorry o(╥﹏╥)o', {
                     confirmButtonText: '确定',

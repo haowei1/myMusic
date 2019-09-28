@@ -1,3 +1,4 @@
+/*
 import {commonParams, options} from '../../../config'
 import axios from 'axios'
 
@@ -24,3 +25,4 @@ export let getLRC = function(musicId) {
     return Promise.resolve(res.data)
   })
 }
+*/

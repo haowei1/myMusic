@@ -9,25 +9,36 @@ module.exports = {
 
     // Paths
     assetsSubDirectory: 'static',
-    assetsPublicPath: '/',
+    assetsPublicPath: './',
     proxyTable: {
-      "/qq_music_api": {
-        target: "https://c.y.qq.com",
-        changeOrigin: true,
-        secure: true,
-        pathRewrite: {
-          '^/qq_music_api': ''
-        }
-      },
-      '/api/getLRC': {
-        target: 'https://c.y.qq.com/lyric/fcgi-bin/fcg_query_lyric_yqq.fcg', //https://y.qq.com/n/yqq/song/000us9j40zyooq.html
-        bypass: function (req, res, proxyOptions) {
-          req.headers.referer = 'https://y.qq.com';
-        },
-        pathRewrite: {
-          '^/api/getLRC': ''
-        }
-      },
+// "/qq_music_api": {
+//   target: "https://c.y.qq.com",
+//   changeOrigin: true,
+//   secure: true,
+//   pathRewrite: {
+//     '^/qq_music_api': ''
+//   }
+// },
+// '/api/getLRC': {
+//   target: 'https://c.y.qq.com/lyric/fcgi-bin/fcg_query_lyric_yqq.fcg', //https://y.qq.com/n/yqq/song/000us9j40zyooq.html
+//   bypass: function (req, res, proxyOptions) {
+//     req.headers.referer = 'https://y.qq.com';
+//   },
+//   pathRewrite: {
+//     '^/api/getLRC': ''
+//   }
+// },
+//       "/music": {
+//         target: "http://localhost:8888/",
+//         changeOrigin: true,
+//         secure: true,
+//         pathRewrite: {
+//           '^/music': ''
+//         }
+//       },
+
+
+
     },
 
     // Various Dev Server settings
@@ -61,7 +72,7 @@ module.exports = {
     // Paths
     assetsRoot: path.resolve(__dirname, '../dist'),
     assetsSubDirectory: 'static',
-    assetsPublicPath: '/',
+    assetsPublicPath: './',
 
     /**
      * Source Maps

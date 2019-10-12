@@ -1,6 +1,7 @@
 <template>
   <div id="player">
     <div>
+      <router-link :to="{name: 'Home'}" class="el-icon-arrow-left" id="back"></router-link>
       <h2 id="name">{{ this.$route.params.item.songname }}</h2>
       <div id="singer">
         <span v-for="(singer, index) in singer">{{ singer.name }} &nbsp;</span>
@@ -118,6 +119,10 @@
     left: 0px;
     text-align: center;
   }
+  #back{
+    position: fixed;
+    left: 50px;
+  }
   #name{
     color: darkslategray;
     margin-top: 50px;
@@ -142,7 +147,7 @@
     position: fixed;
     text-align: center;
     width: 100%;
-    bottom: 170px;
+    bottom: 100px;
     height: auto;
     color: fuchsia;
     margin-left: auto;
